@@ -91,12 +91,180 @@ header {
   background: #a78bfa;
 }
 
+#account {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+#accountEmail {
+  max-width: 125px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+#logoutBtn {
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: #171522;
+  color: white;
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+}
+
 main {
   width: 100%;
   max-width: 850px;
   flex: 1;
   min-height: 0;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.hidden { display: none !important; }
+
+#authScreen {
+  width: 100%;
+  max-width: 440px;
+  margin: auto;
+  padding: 28px 18px;
+}
+
+.auth-card {
+  padding: 25px 21px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: linear-gradient(145deg, #171522, #101018);
+  box-shadow: 0 15px 50px #00000020;
+}
+
+.auth-card .brain {
+  margin-bottom: 18px;
+}
+
+.auth-card h1 {
+  margin: 0 0 10px;
+  text-align: center;
+  font-size: 30px;
+  letter-spacing: -1px;
+}
+
+.auth-description {
+  margin: 0 auto 23px;
+  max-width: 340px;
+  color: var(--muted);
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.auth-label {
+  display: block;
+  margin-top: 14px;
+  color: #ddd7f2;
+  font-size: 12px;
+}
+
+.auth-input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  padding: 13px;
+  margin-top: 7px;
+  border: 1px solid #383548;
+  border-radius: 11px;
+  outline: none;
+  background: #0b0b12;
+  color: white;
+  font: inherit;
+  font-size: 14px;
+}
+
+.auth-input:focus {
+  border-color: var(--purple);
+  box-shadow: 0 0 0 2px #8b5cf620;
+}
+
+.auth-button {
+  width: 100%;
+  min-height: 45px;
+  padding: 12px;
+  margin-top: 14px;
+  border: 0;
+  border-radius: 11px;
+  background: var(--purple);
+  color: white;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.auth-button:hover:not(:disabled) {
+  filter: brightness(1.12);
+}
+
+.auth-button:disabled {
+  opacity: .6;
+  cursor: wait;
+}
+
+.auth-google {
+  background: #f4f2ff;
+  color: #17141e;
+}
+
+.auth-link {
+  display: block;
+  margin: 15px auto 0;
+  padding: 4px;
+  border: 0;
+  background: transparent;
+  color: #c4b5fd;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+#authMessage {
+  margin: 14px 0 0;
+  color: #d8caff;
+  font-size: 12px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+  text-align: center;
+}
+
+#authMessage.error { color: #ffaaaa; }
+#authMessage.success { color: #b8f5cb; }
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 17px 0 0;
+  color: #77758b;
+  font-size: 11px;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: "";
+  height: 1px;
+  flex: 1;
+  background: var(--border);
+}
+
+#chatApp {
+  flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
 }
@@ -132,7 +300,7 @@ main {
   box-shadow: 0 0 45px #8b5cf620;
 }
 
-h1 {
+.welcome h1 {
   margin: 0 0 12px;
   font-size: clamp(28px, 7vw, 43px);
   line-height: 1.2;
@@ -267,7 +435,7 @@ h1 {
 
 .composer:focus-within { border-color: var(--purple); }
 
-textarea {
+#input {
   flex: 1;
   min-width: 0;
   max-height: 140px;
@@ -281,7 +449,7 @@ textarea {
   font-size: 14px;
 }
 
-textarea::placeholder { color: #858197; }
+#input::placeholder { color: #858197; }
 
 #send {
   width: 42px;
@@ -305,9 +473,13 @@ footer {
   text-align: center;
 }
 
-@media (max-width: 420px) {
-  header { padding: 12px; }
+@media (max-width: 480px) {
+  header { padding: 12px; gap: 9px; }
+  .brand { font-size: 18px; }
+  .subtitle { font-size: 10px; }
   .status { font-size: 10px; }
+  #accountEmail { display: none; }
+  #logoutBtn { padding: 7px; }
   #chat { padding: 18px 12px; }
   .welcome { padding: 18px 0; }
   .suggestions {
@@ -317,6 +489,7 @@ footer {
   }
   .suggestion { min-height: 48px; }
   .composer-wrap { padding: 9px; }
+  .auth-card { padding: 22px 17px; }
 }
 </style>
 </head>
@@ -324,81 +497,562 @@ footer {
 <body>
 <header>
   <div class="logo">B</div>
+
   <div>
     <div class="brand">BroAI <span class="gradient">✦</span></div>
     <div class="subtitle">Sua inteligência. Suas ideias.</div>
   </div>
-  <div class="status" id="status">Conectando</div>
+
+  <div class="status" id="status">Verificando sessão</div>
+
+  <div id="account" class="hidden">
+    <span id="accountEmail"></span>
+    <button id="logoutBtn" type="button">Sair</button>
+  </div>
 </header>
 
 <main>
-  <section id="chat">
-    <div class="welcome" id="welcome">
+  <!-- AUTENTICAÇÃO -->
+  <section id="authScreen">
+    <div class="auth-card">
       <div class="brain">✦</div>
-      <h1>O que vamos<br><span class="gradient">descobrir?</span></h1>
-      <p>
-        Seu espaço para aprender, criar e explorar novas ideias.
-        Por onde vamos começar?
+
+      <h1 id="authTitle">
+        Entre na <span class="gradient">BroAI</span>
+      </h1>
+
+      <p class="auth-description" id="authDescription">
+        Entre na sua conta ou crie uma para começar a conversar
+        com sua inteligência artificial.
       </p>
 
-      <div class="suggestions">
-        <button class="suggestion"
-          data-prompt="Faça uma preparação para os meus estudos.">
-          ◈ &nbsp; Preparação para estudos
+      <form id="authForm">
+        <div id="emailArea">
+          <label class="auth-label" for="authEmail">E-mail</label>
+          <input
+            class="auth-input"
+            id="authEmail"
+            type="email"
+            autocomplete="email"
+            placeholder="voce@exemplo.com"
+            required
+          >
+        </div>
+
+        <div id="passwordArea">
+          <label class="auth-label" for="authPassword">Senha</label>
+          <input
+            class="auth-input"
+            id="authPassword"
+            type="password"
+            autocomplete="current-password"
+            minlength="6"
+            placeholder="Sua senha"
+            required
+          >
+        </div>
+
+        <button class="auth-button" id="authSubmit" type="submit">
+          Entrar
         </button>
-        <button class="suggestion"
-          data-prompt="Prepare uma rotina ideal para mim.">
-          ✦ &nbsp; Criar uma rotina
-        </button>
-        <button class="suggestion"
-          data-prompt="Explique como funciona uma inteligência artificial.">
-          ✦ &nbsp; Explorar IA
-        </button>
-        <button class="suggestion"
-          data-prompt="Me ajude a organizar meus objetivos.">
-          ◈ &nbsp; Organizar objetivos
+      </form>
+
+      <button class="auth-link" id="forgotBtn" type="button">
+        Esqueci minha senha
+      </button>
+
+      <div id="googleArea">
+        <div class="auth-divider">ou continue com</div>
+        <button class="auth-button auth-google" id="googleBtn" type="button">
+          Continuar com Google
         </button>
       </div>
+
+      <button class="auth-link" id="switchModeBtn" type="button">
+        Não tem conta? Criar conta
+      </button>
+
+      <button class="auth-link hidden" id="backLoginBtn" type="button">
+        Voltar para o login
+      </button>
+
+      <p id="authMessage" role="status" aria-live="polite"></p>
     </div>
   </section>
 
-  <div id="typing" hidden>
-    BroAI está pensando
-    <span class="typing-dots">
-      <span></span><span></span><span></span>
-    </span>
-  </div>
+  <!-- CHAT -->
+  <div id="chatApp" class="hidden">
+    <section id="chat">
+      <div class="welcome" id="welcome">
+        <div class="brain">✦</div>
+        <h1>O que vamos<br><span class="gradient">descobrir?</span></h1>
+        <p>
+          Seu espaço para aprender, criar e explorar novas ideias.
+          Por onde vamos começar?
+        </p>
 
-  <div class="composer-wrap">
-    <form class="composer" id="form">
-      <textarea
-        id="input"
-        rows="1"
-        maxlength="4000"
-        placeholder="Pergunte qualquer coisa..."
-        aria-label="Sua mensagem"
-      ></textarea>
-      <button id="send" type="submit" aria-label="Enviar">↑</button>
-    </form>
-  </div>
+        <div class="suggestions">
+          <button class="suggestion"
+            data-prompt="Faça uma preparação para os meus estudos.">
+            ◈ &nbsp; Preparação para estudos
+          </button>
+          <button class="suggestion"
+            data-prompt="Prepare uma rotina ideal para mim.">
+            ✦ &nbsp; Criar uma rotina
+          </button>
+          <button class="suggestion"
+            data-prompt="Explique como funciona uma inteligência artificial.">
+            ✦ &nbsp; Explorar IA
+          </button>
+          <button class="suggestion"
+            data-prompt="Me ajude a organizar meus objetivos.">
+            ◈ &nbsp; Organizar objetivos
+          </button>
+        </div>
+      </div>
+    </section>
 
-  <footer>
-    A BroAI usa um modelo de IA externo para gerar respostas.
-  </footer>
+    <div id="typing" hidden>
+      BroAI está pensando
+      <span class="typing-dots">
+        <span></span><span></span><span></span>
+      </span>
+    </div>
+
+    <div class="composer-wrap">
+      <form class="composer" id="form">
+        <textarea
+          id="input"
+          rows="1"
+          maxlength="4000"
+          placeholder="Pergunte qualquer coisa..."
+          aria-label="Sua mensagem"
+        ></textarea>
+        <button id="send" type="submit" aria-label="Enviar">↑</button>
+      </form>
+    </div>
+
+    <footer>
+      A BroAI usa um modelo de IA externo para gerar respostas.
+    </footer>
+  </div>
 </main>
 
+<!-- Biblioteca oficial do Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
+/* =========================================
+   CONFIGURAÇÃO
+   ========================================= */
+
+const SUPABASE_URL =
+  "https://qgyndcmravebgyfsimqy.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_NENBdw7JG9Usd7JY_4MNKA_6TdSVyz8";
+
 const API_URL =
   "https://broai-backend.alvinolamasilva.workers.dev";
+
+const SITE_URL =
+  "https://soucuususu.github.io/broai/";
+
+/* =========================================
+   ELEMENTOS E ESTADO
+   ========================================= */
+
+const authScreen = document.querySelector("#authScreen");
+const chatApp = document.querySelector("#chatApp");
+const authForm = document.querySelector("#authForm");
+const authEmail = document.querySelector("#authEmail");
+const authPassword = document.querySelector("#authPassword");
+const authSubmit = document.querySelector("#authSubmit");
+const authTitle = document.querySelector("#authTitle");
+const authDescription = document.querySelector("#authDescription");
+const authMessage = document.querySelector("#authMessage");
+const passwordArea = document.querySelector("#passwordArea");
+const googleArea = document.querySelector("#googleArea");
+const googleBtn = document.querySelector("#googleBtn");
+const forgotBtn = document.querySelector("#forgotBtn");
+const switchModeBtn = document.querySelector("#switchModeBtn");
+const backLoginBtn = document.querySelector("#backLoginBtn");
+const account = document.querySelector("#account");
+const accountEmail = document.querySelector("#accountEmail");
+const logoutBtn = document.querySelector("#logoutBtn");
+const statusLabel = document.querySelector("#status");
 
 const chat = document.querySelector("#chat");
 const form = document.querySelector("#form");
 const input = document.querySelector("#input");
 const typing = document.querySelector("#typing");
 const send = document.querySelector("#send");
-const statusLabel = document.querySelector("#status");
 
 const history = [];
+const initialChatHTML = chat.innerHTML;
+
+let authMode = "login";
+let currentUser = null;
+let recoveryMode = false;
+let isSending = false;
+
+/* =========================================
+   INICIALIZAÇÃO
+   ========================================= */
+
+let supabaseClient;
+
+try {
+  if (!window.supabase?.createClient) {
+    throw new Error("Não foi possível carregar a biblioteca do Supabase.");
+  }
+
+  supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY,
+    {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true
+      }
+    }
+  );
+} catch (error) {
+  console.error(error);
+  showAuthMessage(
+    "Não foi possível inicializar a autenticação. Confira a configuração.",
+    "error"
+  );
+}
+
+/* =========================================
+   TELAS DE AUTENTICAÇÃO
+   ========================================= */
+
+function showAuthMessage(message, type = "") {
+  authMessage.textContent = message;
+  authMessage.className = type;
+}
+
+function setAuthBusy(busy) {
+  authSubmit.disabled = busy;
+  googleBtn.disabled = busy;
+  authSubmit.textContent = busy ? "Aguarde..." : getSubmitLabel();
+}
+
+function getSubmitLabel() {
+  if (authMode === "signup") return "Criar conta";
+  if (authMode === "reset") return "Enviar recuperação";
+  if (authMode === "recovery") return "Salvar nova senha";
+  return "Entrar";
+}
+
+function setAuthMode(mode) {
+  authMode = mode;
+  showAuthMessage("");
+
+  const isReset = mode === "reset";
+  const isRecovery = mode === "recovery";
+  const isSignup = mode === "signup";
+
+  authScreen.classList.remove("hidden");
+  chatApp.classList.add("hidden");
+  account.classList.add("hidden");
+
+  passwordArea.classList.toggle("hidden", isReset);
+  googleArea.classList.toggle("hidden", isReset || isRecovery);
+  forgotBtn.classList.toggle("hidden", isSignup || isReset || isRecovery);
+  switchModeBtn.classList.toggle("hidden", isReset || isRecovery);
+  backLoginBtn.classList.toggle("hidden", !isReset);
+
+  authPassword.required = !isReset;
+  authPassword.autocomplete = isSignup || isRecovery
+    ? "new-password"
+    : "current-password";
+
+  authPassword.placeholder = isRecovery
+    ? "Digite sua nova senha"
+    : "Sua senha";
+
+  if (isRecovery) {
+    authTitle.innerHTML = 'Nova <span class="gradient">senha</span>';
+    authDescription.textContent =
+      "Escolha uma nova senha para acessar sua conta.";
+    authPassword.minLength = 6;
+    authSubmit.textContent = "Salvar nova senha";
+  } else if (isReset) {
+    authTitle.innerHTML = 'Recuperar <span class="gradient">conta</span>';
+    authDescription.textContent =
+      "Digite seu e-mail e enviaremos um link para redefinir sua senha.";
+    authSubmit.textContent = "Enviar recuperação";
+  } else if (isSignup) {
+    authTitle.innerHTML = 'Criar conta na <span class="gradient">BroAI</span>';
+    authDescription.textContent =
+      "Crie sua conta para acessar a BroAI.";
+    authSubmit.textContent = "Criar conta";
+    switchModeBtn.textContent = "Já tem conta? Entrar";
+  } else {
+    authTitle.innerHTML = 'Entre na <span class="gradient">BroAI</span>';
+    authDescription.textContent =
+      "Entre na sua conta para começar a conversar com sua inteligência artificial.";
+    authSubmit.textContent = "Entrar";
+    switchModeBtn.textContent = "Não tem conta? Criar conta";
+  }
+
+  statusLabel.textContent = "Aguardando login";
+}
+
+function showChat(user) {
+  if (recoveryMode) return;
+
+  currentUser = user;
+  authScreen.classList.add("hidden");
+  chatApp.classList.remove("hidden");
+  account.classList.remove("hidden");
+
+  accountEmail.textContent = user.email || "Conta conectada";
+  accountEmail.title = user.email || "";
+  statusLabel.textContent = "Conectado";
+}
+
+function showLoginAfterLogout() {
+  currentUser = null;
+  recoveryMode = false;
+  history.length = 0;
+  chat.innerHTML = initialChatHTML;
+  input.value = "";
+  input.style.height = "auto";
+  typing.hidden = true;
+  send.disabled = false;
+  isSending = false;
+
+  setAuthMode("login");
+}
+
+/* =========================================
+   CADASTRO, LOGIN E RECUPERAÇÃO
+   ========================================= */
+
+authForm.addEventListener("submit", async event => {
+  event.preventDefault();
+
+  if (!supabaseClient) {
+    showAuthMessage("O serviço de autenticação não foi carregado.", "error");
+    return;
+  }
+
+  const email = authEmail.value.trim();
+  const password = authPassword.value;
+
+  showAuthMessage("");
+  setAuthBusy(true);
+
+  try {
+    if (authMode === "signup") {
+      const { data, error } = await supabaseClient.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: SITE_URL
+        }
+      });
+
+      if (error) throw error;
+
+      if (data.session && data.user) {
+        recoveryMode = false;
+        showChat(data.user);
+      } else {
+        showAuthMessage(
+          "Cadastro enviado! Confira seu e-mail para confirmar a conta antes de entrar.",
+          "success"
+        );
+      }
+
+    } else if (authMode === "login") {
+      const { data, error } =
+        await supabaseClient.auth.signInWithPassword({
+          email,
+          password
+        });
+
+      if (error) throw error;
+
+      recoveryMode = false;
+      showChat(data.user);
+
+    } else if (authMode === "reset") {
+      const { error } =
+        await supabaseClient.auth.resetPasswordForEmail(email, {
+          redirectTo: SITE_URL + "?recovery=1"
+        });
+
+      if (error) throw error;
+
+      showAuthMessage(
+        "Se existir uma conta para esse e-mail, você receberá um link para redefinir a senha. Confira também o spam.",
+        "success"
+      );
+
+    } else if (authMode === "recovery") {
+      if (password.length < 6) {
+        throw new Error("A nova senha precisa ter pelo menos 6 caracteres.");
+      }
+
+      const { data, error } =
+        await supabaseClient.auth.updateUser({ password });
+
+      if (error) throw error;
+
+      recoveryMode = false;
+      authPassword.value = "";
+      showAuthMessage("Senha atualizada com sucesso!", "success");
+
+      if (data.user) {
+        showChat(data.user);
+      } else {
+        setAuthMode("login");
+        showAuthMessage(
+          "Senha atualizada. Entre com sua nova senha.",
+          "success"
+        );
+      }
+    }
+
+  } catch (error) {
+    console.error("Erro de autenticação:", error);
+
+    let message = error.message || "Não foi possível concluir a operação.";
+
+    if (/invalid login credentials/i.test(message)) {
+      message = "E-mail ou senha incorretos.";
+    } else if (/user already registered/i.test(message)) {
+      message = "Esse e-mail já possui uma conta. Tente entrar.";
+    } else if (/password should be at least/i.test(message)) {
+      message = "Sua senha precisa ter pelo menos 6 caracteres.";
+    } else if (/email not confirmed/i.test(message)) {
+      message = "Confirme seu e-mail antes de entrar.";
+    }
+
+    showAuthMessage(message, "error");
+
+  } finally {
+    setAuthBusy(false);
+  }
+});
+
+switchModeBtn.addEventListener("click", () => {
+  setAuthMode(authMode === "login" ? "signup" : "login");
+});
+
+forgotBtn.addEventListener("click", () => {
+  setAuthMode("reset");
+});
+
+backLoginBtn.addEventListener("click", () => {
+  setAuthMode("login");
+});
+
+googleBtn.addEventListener("click", async () => {
+  if (!supabaseClient) return;
+
+  showAuthMessage("");
+  googleBtn.disabled = true;
+
+  try {
+    const { error } = await supabaseClient.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: SITE_URL
+      }
+    });
+
+    if (error) throw error;
+
+  } catch (error) {
+    console.error("Erro no login Google:", error);
+    showAuthMessage(
+      error.message || "Não foi possível entrar com o Google.",
+      "error"
+    );
+    googleBtn.disabled = false;
+  }
+});
+
+/* =========================================
+   SESSÃO E LOGOUT
+   ========================================= */
+
+if (supabaseClient) {
+  supabaseClient.auth.onAuthStateChange((event, session) => {
+    if (event === "PASSWORD_RECOVERY") {
+      recoveryMode = true;
+      setAuthMode("recovery");
+      showAuthMessage("Digite e confirme sua nova senha.", "success");
+      return;
+    }
+
+    if (recoveryMode) return;
+
+    if (session?.user) {
+      showChat(session.user);
+    } else if (
+      event === "SIGNED_OUT" ||
+      event === "INITIAL_SESSION"
+    ) {
+      showLoginAfterLogout();
+    }
+  });
+
+  supabaseClient.auth.getSession().then(({ data, error }) => {
+    if (error) {
+      console.error("Erro ao verificar sessão:", error);
+      setAuthMode("login");
+      showAuthMessage(
+        "Não foi possível verificar sua sessão. Tente entrar novamente.",
+        "error"
+      );
+      return;
+    }
+
+    if (recoveryMode) return;
+
+    if (data.session?.user) {
+      showChat(data.session.user);
+    } else {
+      setAuthMode("login");
+    }
+  }).catch(error => {
+    console.error(error);
+    setAuthMode("login");
+    showAuthMessage("Erro ao verificar a sessão.", "error");
+  });
+}
+
+logoutBtn.addEventListener("click", async () => {
+  if (!supabaseClient) return;
+
+  logoutBtn.disabled = true;
+
+  try {
+    const { error } = await supabaseClient.auth.signOut();
+
+    if (error) throw error;
+
+    showLoginAfterLogout();
+
+  } catch (error) {
+    console.error("Erro ao sair:", error);
+    statusLabel.textContent = "Erro ao sair";
+  } finally {
+    logoutBtn.disabled = false;
+  }
+});
+
+/* =========================================
+   CHAT DA BROAI
+   ========================================= */
 
 function addMessage(text, who) {
   document.querySelector("#welcome")?.remove();
@@ -424,7 +1078,14 @@ function addMessage(text, who) {
 async function submitMessage(text) {
   text = text.trim();
 
-  if (!text || send.disabled) return;
+  if (!text || send.disabled || isSending) return;
+
+  if (!currentUser) {
+    setAuthMode("login");
+    return;
+  }
+
+  isSending = true;
 
   addMessage(text, "user");
   history.push({ role: "user", content: text });
@@ -461,8 +1122,10 @@ async function submitMessage(text) {
       );
     }
 
-    if (typeof data.response !== "string" ||
-        !data.response.trim()) {
+    if (
+      typeof data.response !== "string" ||
+      !data.response.trim()
+    ) {
       throw new Error("A IA retornou uma resposta vazia.");
     }
 
@@ -472,29 +1135,39 @@ async function submitMessage(text) {
     });
 
     addMessage(data.response, "assistant");
-    statusLabel.textContent = "Resposta recebida";
+    statusLabel.textContent = "Conectado";
 
   } catch (error) {
     console.error("Erro da BroAI:", error);
 
-    // Remove a mensagem que falhou do histórico enviado à IA.
-    history.pop();
+    // Remove a mensagem enviada que falhou.
+    const lastMessage = history[history.length - 1];
+
+    if (lastMessage?.role === "user" &&
+        lastMessage.content === text) {
+      history.pop();
+    }
 
     let message = error.message || "Erro desconhecido.";
 
     if (error.name === "TypeError") {
       message =
-        "Não consegui acessar o servidor. Verifique a conexão, " +
-        "o endereço do Worker e as permissões CORS.";
+        "Não consegui acessar o servidor. Verifique sua conexão e as permissões CORS.";
     }
 
-    addMessage("Não consegui responder agora. " + message, "assistant");
+    addMessage(
+      "Não consegui responder agora. " + message,
+      "assistant"
+    );
+
     statusLabel.textContent = "Erro de conexão";
 
   } finally {
     typing.hidden = true;
     send.disabled = false;
-    input.focus();
+    isSending = false;
+
+    if (currentUser) input.focus();
   }
 }
 
